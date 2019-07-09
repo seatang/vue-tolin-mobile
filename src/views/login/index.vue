@@ -35,6 +35,8 @@
       <van-button
         class="btn"
         type="info"
+        :loading="loading"
+        loading-text="登录中..."
         @click="onCheckLogin"
       >登录</van-button>
     </div>
@@ -42,13 +44,14 @@
 </template>
 
 <script>
+import { login } from '@/api/requestAPI'
 export default {
   name: 'AppLogin',
   data () {
     return {
       userForm: { // 表单数据
-        mobile: '',
-        code: ''
+        mobile: '17600200335',
+        code: '123456'
       },
       loading: false,
       errors: { // 错误提示
@@ -74,20 +77,22 @@ export default {
       } else {
         // 调取登录请求函数
         errors.code = ''
-        this.handleLogin(mobile, code)
+        this.handleLogin()
       }
     },
     // 登录请求
-    async handleLogin (mobile, code) {
-      //   axios请求
-      this.loading = true
-      await setTimeout(() => {
-        console.log('登录中....')
-      }, 5000)
-      //   try {
-      //   } catch (error) {
-
-      //   }
+    async handleLogin () {
+      try {
+        this.loading = true
+        const data = await login(this.userForm)
+        // console.log(data)
+        // 保存登录信息到本地存储
+        this.$store.commit('changUser', data)
+        this.$toast.success('登录成功')
+      } catch (error) {
+        console.log(error)
+        this.$toast.fail('登录失败')
+      }
       this.loading = false
     }
   }
