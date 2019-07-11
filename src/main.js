@@ -4,11 +4,19 @@ import router from './router'
 import store from './store'
 import 'vant/lib/index.css'
 import '@/styles/index.less'
+// 引入第三方表单校验
+import VeeValidate, { Validator } from 'vee-validate'
+import zhCN from 'vee-validate/dist/locale/zh_CN'
 
 import 'amfe-flexible'
 // 全部引入，后续再按需引入
 import Vant from 'vant'
 Vue.use(Vant)
+
+Vue.use(VeeValidate, {
+  events: ''
+})
+Validator.localize('zh_CN', zhCN)
 
 // import { Button, Field, CellGroup, Icon, Toast, Loading } from 'vant'
 
