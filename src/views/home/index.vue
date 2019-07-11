@@ -4,13 +4,13 @@
     <van-nav-bar
       title="首页"
       fixed
+      class="nav-bar"
     >
     </van-nav-bar>
     <!-- 频道 -->
     <van-tabs
       v-model="articlesChannelIndex"
       animated
-      color="#3399ff"
       class="home-header-tabs"
     >
       <!-- 频道文章 -->
@@ -19,11 +19,12 @@
         v-for="channelItem in channelsList"
         :key="channelItem.id"
       >
+        <!-- 下拉加载最新数据 -->
         <van-pull-refresh
-          v-model="loading"
+          v-model="channelItem.downLoading"
           @refresh="onRefresh"
         >
-          <!-- 下拉加载 -->
+          <!-- 上划加载 -->
           <van-list
             v-model="channelItem.upLoading"
             :finished="channelItem.upFinished"
@@ -41,24 +42,7 @@
       </van-tab>
     </van-tabs>
     <!-- 底部导航 -->
-    <van-tabbar v-model="tabbar">
-      <van-tabbar-item
-        to="/"
-        icon="wap-home"
-      >首页</van-tabbar-item>
-      <van-tabbar-item
-        to="/quers"
-        icon="comment-o"
-      >问答</van-tabbar-item>
-      <van-tabbar-item
-        to="/video"
-        icon="video-o"
-      >视频</van-tabbar-item>
-      <van-tabbar-item
-        to="/my"
-        icon="contact"
-      >我的</van-tabbar-item>
-    </van-tabbar>
+
   </div>
 </template>
 
@@ -119,8 +103,28 @@ export default {
     },
     // 下拉更新数据
     async onRefresh () {
-      await this.onLoad()
-      this.loading = false
+      await this.$sleep(800)
+      // 备份当前时间戳
+      const timestamp = this.articlesChannel.timestamp
+      // 更新当前时间戳，获取最新数据
+      this.articlesChannel.timestamp = Date.now()
+      const data = await this.loadActiclesChannelList()
+      // 判断是否有最新数据,获取到最新数据
+      if (data.results.length) {
+        // 重置频道文章数据列表
+        this.articlesChannel.articles = data.results
+        // 重置时间戳，便于下次请求
+        this.articlesChannel.timestamp = data.pre_timestamp
+        // 更新数据，数据一屏幕铺不满，再次加载数据
+        this.onLoad()
+      } else {
+        // 没有新数据，还原时间戳
+        this.articlesChannel.timestamp = timestamp
+        // 没有最新数
+        this.$toast('没有最新数据')
+      }
+      // 取消下拉更新状态
+      this.articlesChannel.downLoading = false
     },
     // 获取频道列表
     async loadChannelsList () {
