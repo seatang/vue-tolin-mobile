@@ -94,6 +94,7 @@ export default {
     },
     // 上划加载数据
     async onLoad () {
+      await this.$sleep(500)
       let data = []
       data = await this.loadActiclesChannelList()
       // 判断数据是否加载完毕

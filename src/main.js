@@ -18,6 +18,13 @@ Vue.use(VeeValidate, {
 })
 Validator.localize('zh_CN', zhCN)
 
+// 定义全局定时器，控制数据加载
+Vue.prototype.$sleep = time => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => { resolve() }, time)
+  })
+}
+
 // import { Button, Field, CellGroup, Icon, Toast, Loading } from 'vant'
 
 // Vue
