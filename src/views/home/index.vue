@@ -12,7 +12,11 @@
       color="#3399ff"
       class="home-header-tabs"
     >
-      <van-tab title="标签 1">
+      <van-tab
+        :title="channelItem.name"
+        v-for="channelItem in channelsList"
+        :key="channelItem.id"
+      >
         <van-pull-refresh
           v-model="loading"
           @refresh="onRefresh"
@@ -32,13 +36,6 @@
         </van-pull-refresh>
 
       </van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
-      <van-tab title="标签 6">内容 6</van-tab>
-      <van-tab title="标签 7">内容 7</van-tab>
-      <van-tab title="标签 8">内容 8</van-tab>
     </van-tabs>
 
     <van-tabbar v-model="tabbar">
@@ -63,6 +60,7 @@
 </template>
 
 <script>
+import { getchannelsList } from '@/api/channelsAPI'
 export default {
   name: 'Home',
   data () {
@@ -71,10 +69,20 @@ export default {
       tabs: 0,
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      channelsList: [] // 频道列表
     }
   },
+  created () {
+    this.init()
+  },
+
   methods: {
+    // 初始化数据
+    init () {
+      this.getChannelsList()
+    },
+    // 上划加载数据
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
@@ -90,9 +98,26 @@ export default {
         }
       }, 500)
     },
+    // 下来更新数据
     async onRefresh () {
       await this.onLoad()
       this.loading = false
+    },
+    // 获取频道列表
+    async getChannelsList () {
+      try {
+        // 读取本地频道列表
+        const localChannels = window.localStorage.getItem('channels')
+        if (localChannels) {
+          this.channelsList = localChannels
+        } else {
+          // 请求服务器端频道列表
+          this.channelsList = (await getchannelsList()).channels
+          console.log(this.channelsList)
+        }
+      } catch (error) {
+        this.$toast('获取数据失败')
+      }
     }
   }
 }
