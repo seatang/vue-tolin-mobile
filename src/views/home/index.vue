@@ -170,6 +170,16 @@ export default {
         console.log(error)
       }
     }
+  },
+  // 监视用户是否登录，因为路由已经换成，不在调用钩子函数,需要监视用户登录状态
+  watch: {
+    async '$store.state.user' () {
+      // 需要重新初始化数据
+      this.init()
+      // 设置上划状态为true，重新获取频道文章数据
+      this.articlesChannel.upLoading = true
+      await this.onLoad()
+    }
   }
 }
 </script>
