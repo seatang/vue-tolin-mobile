@@ -68,11 +68,14 @@
         square
       >
         <van-grid-item
-          v-for="value in 8"
-          :key="value"
-          text="文字"
+          v-for="item in allChannels"
+          :key="item.id"
         >
-          <span class="text">文字</span>
+          <span class="text">{{ item.name }}</span>
+          <van-icon
+            class="close-icon"
+            name="add-o"
+          />
         </van-grid-item>
       </van-grid>
     </div>
@@ -80,6 +83,7 @@
 </template>
 
 <script>
+import { getAllChannelsList } from '@/api/channelsAPI'
 export default {
   name: 'Homechannel',
   props: {
@@ -101,11 +105,23 @@ export default {
   },
   data () {
     return {
-      isEdit: false // 是否编辑
+      isEdit: false, // 是否编辑
+      allChannels: [] // 全部数据列表
     }
   },
+  created () {
+    this.init()
+  },
   methods: {
-
+    // 组件数据初始化
+    init () {
+      this.loadAllChannels()
+    },
+    // 加载全部频道列表
+    async loadAllChannels () {
+      const data = await getAllChannelsList()
+      this.allChannels = data.channels
+    }
   },
   components: {
 
