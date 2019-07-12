@@ -50,9 +50,10 @@
       </van-tab>
     </van-tabs>
     <!-- 弹出层，编辑频道 -->
+    <!-- 使用  .sync  修饰符来监听user-channel事件 -->
     <home-channel
       v-model="popupChannle"
-      :user-channel="channelsList"
+      :user-channel.sync="channelsList"
       :channel-index="articlesChannelIndex"
     ></home-channel>
   </div>

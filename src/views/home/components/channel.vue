@@ -70,6 +70,7 @@
         <van-grid-item
           v-for="item in recommendChannel"
           :key="item.id"
+          @click="handleAddChannels(item)"
         >
           <span class="text">{{ item.name }}</span>
           <van-icon
@@ -120,7 +121,26 @@ export default {
     // 加载全部频道列表
     async loadAllChannels () {
       const data = await getAllChannelsList()
+      // 这里应该对获取的结果遍历添加新属性进行封装
+      // 手动添加频道文章以及文章的状态
+      data.channels.forEach(item => {
+        item.articles = [] // 频道文章列表
+        item.timestamp = Date.now() // 存储下一个时间戳
+        item.downLoading = false // 下拉更新状态
+        item.upLoading = false // 上划加载数据状态
+        item.upFinished = false // 文章列表是否加载完毕
+      })
       this.allChannels = data.channels
+    },
+    // 添加推荐频道到用户频道中
+    handleAddChannels (item) {
+      // this.userChannel.push(item)
+      // 新增数组，将父组件的数据进行拷贝
+      const channel = this.userChannel.slice(0)
+      // 在新数组中添加推荐频道
+      channel.push(item)
+      // 再将添加后的数组，返回给父组件，由父组件来修改用户的频道
+      this.$emit('update:user-channel', channel)
     }
   },
   computed: {
