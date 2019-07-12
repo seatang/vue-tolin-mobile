@@ -13,6 +13,14 @@
       animated
       class="home-header-tabs"
     >
+      <!-- 编辑频道 -->
+      <div
+        slot="nav-right"
+        class="nav-right"
+        @click="popupChannle = true"
+      >
+        <van-icon name="bars" />
+      </div>
       <!-- 频道文章 -->
       <van-tab
         :title="channelItem.name"
@@ -41,24 +49,26 @@
 
       </van-tab>
     </van-tabs>
-    <!-- 底部导航 -->
-
+    <!-- 弹出层，编辑频道 -->
+    <home-channel
+      v-model="popupChannle"
+      :user-channel="channelsList"
+      :channel-index="articlesChannelIndex"
+    ></home-channel>
   </div>
 </template>
 
 <script>
+import homeChannel from './components/channel'
 import { getUserChannelsList } from '@/api/channelsAPI'
 import { getArticlesList } from '@/api/articlesAPI'
 export default {
   name: 'Home',
   data () {
     return {
-      tabbar: 0, // 底部导航索引
-      list: [],
-      loading: false,
-      finished: false,
       channelsList: [], // 频道列表
-      articlesChannelIndex: 0 // 频道索引
+      articlesChannelIndex: 0, // 频道索引
+      popupChannle: false
     }
   },
   created () {
@@ -180,6 +190,9 @@ export default {
       this.articlesChannel.upLoading = true
       await this.onLoad()
     }
+  },
+  components: {
+    homeChannel
   }
 }
 </script>
@@ -195,5 +208,13 @@ export default {
 
 .home-header-tabs /deep/ .van-tabs__content {
   margin-top: 92px;
+}
+.home-header-tabs .nav-right {
+  position: sticky;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 0 5px;
 }
 </style>
