@@ -27,7 +27,8 @@
             plain
             round
             size="mini"
-          >编辑</van-button>
+            @click="isEdit = !isEdit"
+          >{{ isEdit ? '完成':'编辑' }}</van-button>
         </div>
       </div>
       <van-grid
@@ -47,6 +48,7 @@
           <van-icon
             class="close-icon"
             name="close"
+            v-show="isEdit"
           />
         </van-grid-item>
       </van-grid>
@@ -99,6 +101,7 @@ export default {
   },
   data () {
     return {
+      isEdit: false // 是否编辑
     }
   },
   methods: {
