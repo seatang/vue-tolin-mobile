@@ -68,7 +68,7 @@
         square
       >
         <van-grid-item
-          v-for="item in allChannels"
+          v-for="item in recommendChannel"
           :key="item.id"
         >
           <span class="text">{{ item.name }}</span>
@@ -123,8 +123,13 @@ export default {
       this.allChannels = data.channels
     }
   },
-  components: {
-
+  computed: {
+    // 过滤掉全部频道中的用户选中的频道
+    recommendChannel () {
+      // 将用户频道进行遍历，取出id
+      const userRecommendChannel = this.userChannel.map(item => item.id)
+      return this.allChannels.filter(item => !userRecommendChannel.includes(item.id))
+    }
   }
 }
 </script>
