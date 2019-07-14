@@ -10,6 +10,7 @@
       <van-cell
         icon="info-o"
         title="不感兴趣"
+        @click="handeldislikesArticle()"
       />
       <van-cell
         icon="chat-o"
@@ -101,7 +102,8 @@ export default {
   methods: {
     // 文章不喜欢
     async handeldislikesArticle () {
-
+      // dislikesArticle
+      // console.log(this.operationArticle)
     }
   }
 }
