@@ -43,7 +43,34 @@
               v-for="item in channelItem.articles"
               :key="item.art_id"
               :title="item.title"
-            />
+            >
+              <div slot="label">
+                <template v-if="item.cover.type">
+                  <van-grid
+                    :border="false"
+                    :column-num="3"
+                  >
+                    <van-grid-item
+                      v-for="(images, index) in item.cover.images"
+                      :key="index"
+                    >
+                      <van-image :src="images" />
+                    </van-grid-item>
+                  </van-grid>
+                </template>
+                <van-row>
+                  <van-col span="8">作者：{{item.aut_name}}</van-col>
+                  <van-col span="4">{{item.comm_count}}评论</van-col>
+                  <van-col span="8">{{item.pubdate}}</van-col>
+                  <van-col span="4">
+                    <van-icon
+                      style="float: right; font-size: 20px;"
+                      name="close"
+                    />
+                  </van-col>
+                </van-row>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
 
@@ -146,6 +173,7 @@ export default {
         if (user) {
           const data = (await getUserChannelsList()).channels
           channelsList = data
+          console.log(data)
         } else {
           // 未登录,读取本地频道列表，如果没有，再次请求
           const localChannels = JSON.parse(window.localStorage.getItem('channels'))
