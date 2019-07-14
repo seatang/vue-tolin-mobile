@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: window.localStorage.getItem('user')
+    user: JSON.parse(window.localStorage.getItem('user'))
   },
   mutations: {
     changUser (state, user) {

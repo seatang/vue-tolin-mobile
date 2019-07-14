@@ -54,7 +54,7 @@
     <home-channel
       v-model="popupChannle"
       :user-channel.sync="channelsList"
-      :channel-index="articlesChannelIndex"
+      :channel-index.sync="articlesChannelIndex"
     ></home-channel>
   </div>
 </template>

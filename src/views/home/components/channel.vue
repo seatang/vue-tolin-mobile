@@ -40,10 +40,11 @@
         <van-grid-item
           v-for="(item,index) in userChannel"
           :key="item.id"
+          @click="handleRemoveChannel(item,index)"
         >
           <span
             class="text"
-            :class="{ active : index==channelIndex}"
+            :class="{ active : index === channelIndex && !isEdit}"
           >{{ item.name }}</span>
           <van-icon
             class="close-icon"
@@ -68,9 +69,9 @@
         square
       >
         <van-grid-item
-          v-for="item in recommendChannel"
+          v-for="(item, index) in recommendChannel"
           :key="item.id"
-          @click="handleAddChannels(item)"
+          @click="handleAddChannels(item,index)"
         >
           <span class="text">{{ item.name }}</span>
           <van-icon
@@ -84,7 +85,7 @@
 </template>
 
 <script>
-import { getAllChannelsList } from '@/api/channelsAPI'
+import { getAllChannelsList, addUserAllChannelsList, deleteUserChannel } from '@/api/channelsAPI'
 export default {
   name: 'Homechannel',
   props: {
@@ -133,7 +134,7 @@ export default {
       this.allChannels = data.channels
     },
     // 添加推荐频道到用户频道中
-    handleAddChannels (item) {
+    async handleAddChannels (item, index) {
       // this.userChannel.push(item)
       // 新增数组，将父组件的数据进行拷贝
       const channel = this.userChannel.slice(0)
@@ -141,6 +142,42 @@ export default {
       channel.push(item)
       // 再将添加后的数组，返回给父组件，由父组件来修改用户的频道
       this.$emit('update:user-channel', channel)
+      // console.log(item, index)
+      // 将添加的频道保存到本地或更新到用户的频道中
+      const { user } = this.$store.state
+      // 判断用户是否登录
+      if (!user) {
+        // 未登录
+        window.localStorage.setItem('channels', JSON.stringify(channel))
+        return
+      }
+      // 已登录
+      const id = item.id
+      const data = await addUserAllChannelsList({ id, seq: index })
+      console.log(data.data)
+    },
+    // 删除用户频道
+    async handleRemoveChannel (item, index) {
+      // 判断是否是编辑状态
+      if (!this.isEdit) {
+        this.$emit('update:channel-index', index)
+        this.$emit('input', false)
+        return
+      }
+      // 将删除的用户频道传回父组件
+      const channel = this.userChannel.slice(0)
+      channel.splice(index, 1)
+      this.$emit('update:user-channel', channel)
+
+      // 更新用户或本地的频道
+      const { user } = this.$store.state
+      if (user) {
+        // 已登录
+        await deleteUserChannel(item.id)
+        return
+      }
+      //  未登录，更新本地存储
+      window.localStorage.setItem('channels', JSON.stringify(channel))
     }
   },
   computed: {

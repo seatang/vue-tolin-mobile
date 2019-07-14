@@ -114,6 +114,7 @@ export default {
         // console.log(data)
         // 保存登录信息到本地存储
         this.$store.commit('changUser', data)
+
         this.$toast.success('登录成功')
         this.$router.push({ name: 'home' })
       } catch (error) {

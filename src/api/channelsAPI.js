@@ -17,3 +17,31 @@ export const getAllChannelsList = () => {
     url: '/app/v1_0/channels'
   })
 }
+
+/**
+ * 增加全部用户频道
+ * id:频道id（integer）
+ * seq:频道顺序序号（integer）
+ */
+export const addUserAllChannelsList = ([{ id, seq }]) => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/channels',
+    data: {
+      id,
+      seq
+    }
+  })
+}
+
+/**
+ * 增加全部用户频道
+ * id:频道id（integer）
+ * seq:频道顺序序号（integer）
+ */
+export const deleteUserChannel = target => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/channels/${target}`
+  })
+}
