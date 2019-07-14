@@ -66,6 +66,7 @@
                     <van-icon
                       style="float: right; font-size: 20px;"
                       name="close"
+                      @click="isOperationShowFn(item)"
                     />
                   </van-col>
                 </van-row>
@@ -83,6 +84,11 @@
       :user-channel.sync="channelsList"
       :channel-index.sync="articlesChannelIndex"
     ></home-channel>
+    <!-- 操作文章弹出层 -->
+    <operation-article
+      v-model="isOperationShow"
+      :operation-article="operationArticle"
+    ></operation-article>
   </div>
 </template>
 
@@ -90,6 +96,7 @@
 import homeChannel from './components/channel'
 import { getUserChannelsList } from '@/api/channelsAPI'
 import { getArticlesList } from '@/api/articlesAPI'
+import operationArticle from './components/operation'
 
 export default {
   name: 'Home',
@@ -97,7 +104,9 @@ export default {
     return {
       channelsList: [], // 频道列表
       articlesChannelIndex: 0, // 频道索引
-      popupChannle: false
+      popupChannle: false, // 用户频道弹出层显示状态
+      isOperationShow: false, // 操作文章弹出层显示状态
+      operationArticle: {} // 举报的文章
     }
   },
   created () {
@@ -209,6 +218,12 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // 对文章进行操作
+    isOperationShowFn (item) {
+      this.isOperationShow = true
+      this.operationArticle = item
+      console.log(item)
     }
   },
   // 监视用户是否登录，因为路由已经换成，不在调用钩子函数,需要监视用户登录状态
@@ -222,7 +237,8 @@ export default {
     }
   },
   components: {
-    homeChannel
+    homeChannel,
+    operationArticle
   }
 }
 </script>
