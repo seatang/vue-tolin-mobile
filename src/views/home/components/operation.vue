@@ -21,6 +21,7 @@
       <van-cell
         icon="close"
         title="拉黑作者"
+        @click="handelBlacklists()"
       />
     </van-cell-group>
     <van-cell-group v-else>
@@ -41,6 +42,7 @@
 
 <script>
 import { dislikesArticle } from '@/api/articlesAPI'
+import { blacklists } from '@/api/requestAPI'
 export default {
   name: 'operationArticle',
   props: {
@@ -120,6 +122,17 @@ export default {
       } catch (error) {
         this.$toast('请登录' + error)
         this.$router.push({ name: 'login' })
+      }
+    },
+    // 拉黑作者
+    async handelBlacklists () {
+      try {
+        const autId = this.operationArticleData.aut_id
+        await blacklists(autId)
+        this.$toast('操作成功')
+        this.$emit('input', false)
+      } catch (error) {
+        this.$toast('操作失败' + error)
       }
     }
   }
