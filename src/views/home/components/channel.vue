@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { getAllChannelsList, addUserAllChannelsList, deleteUserChannel } from '@/api/channelsAPI'
+import { getAllChannelsList, deleteUserChannel, updateUserChannels } from '@/api/channelsAPI'
 export default {
   name: 'Homechannel',
   props: {
@@ -152,8 +152,7 @@ export default {
         return
       }
       // 已登录
-      const id = item.id
-      const data = await addUserAllChannelsList({ id, seq: index })
+      const data = await updateUserChannels([{ id: item.id, seq: channel.length - 1 }])
       console.log(data.data)
     },
     // 删除用户频道

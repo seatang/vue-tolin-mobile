@@ -35,13 +35,28 @@ export const addUserAllChannelsList = ([{ id, seq }]) => {
 }
 
 /**
- * 增加全部用户频道
- * id:频道id（integer）
- * seq:频道顺序序号（integer）
+ * 删除用户频道
+ * target:频道id（integer）
  */
 export const deleteUserChannel = target => {
   return request({
     method: 'DELETE',
     url: `/app/v1_0/user/channels/${target}`
+  })
+}
+
+/**
+ * 批量修改用户频道列表（部分覆盖）
+ * channels:[]
+ * id:频道的id
+ * seq：频道的序号
+ */
+export const updateUserChannels = channels => {
+  return request({
+    method: 'PATCH',
+    url: `/app/v1_0/user/channels`,
+    data: {
+      channels
+    }
   })
 }
