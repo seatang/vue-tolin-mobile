@@ -40,7 +40,7 @@
 </template>
 
 <script>
-// import { dislikesArticle } from '@/api/articlesAPI'
+import { dislikesArticle } from '@/api/articlesAPI'
 export default {
   name: 'operationArticle',
   props: {
@@ -48,16 +48,19 @@ export default {
       type: Boolean,
       default: false
     },
-    operationArticle: {
+    operationArticleData: {
       type: Object,
       default: () => { }
+    },
+    operationType: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       // 举报数据列表
       reportList: [
-
         {
           label: '标题夸张',
           value: 1
@@ -102,8 +105,22 @@ export default {
   methods: {
     // 文章不喜欢
     async handeldislikesArticle () {
-      // dislikesArticle
-      // console.log(this.operationArticle)
+      try {
+        // 定义一个新对象，在新对象中修改文章的反馈状态
+        const newOperationArticleData = {}
+        const articleId = this.operationArticleData.art_id.toString()
+        await dislikesArticle(articleId)
+        // 将父组件传下来的文章对象赋值给新对象
+        Object.assign(newOperationArticleData, this.operationArticleData)
+        newOperationArticleData.operationType = true
+        this.$toast('操作成功')
+        // 关闭文章操作弹出层
+        this.$emit('input', false)
+        this.$emit('update:operation-article-data', newOperationArticleData)
+      } catch (error) {
+        this.$toast('请登录' + error)
+        this.$router.push({ name: 'login' })
+      }
     }
   }
 }

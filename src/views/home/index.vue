@@ -41,7 +41,7 @@
           >
             <van-cell
               v-for="item in channelItem.articles"
-              :key="item.art_id"
+              :key="item.art_id.toString()"
               :title="item.title"
             >
               <div slot="label">
@@ -87,7 +87,8 @@
     <!-- 操作文章弹出层 -->
     <operation-article
       v-model="isOperationShow"
-      :operation-article="operationArticle"
+      :operation-article-data.sync="operationArticleData"
+      :operation-type.sync="operationType"
     ></operation-article>
   </div>
 </template>
@@ -106,7 +107,8 @@ export default {
       articlesChannelIndex: 0, // 频道索引
       popupChannle: false, // 用户频道弹出层显示状态
       isOperationShow: false, // 操作文章弹出层显示状态
-      operationArticle: {} // 举报的文章
+      operationArticleData: {}, // 举报的文章
+      operationType: false // 举报的文章状态
     }
   },
   created () {
@@ -183,7 +185,7 @@ export default {
         if (user) {
           const data = (await getUserChannelsList()).channels
           channelsList = data
-          console.log(data)
+          // console.log(data)
         } else {
           // 未登录,读取本地频道列表，如果没有，再次请求
           const localChannels = JSON.parse(window.localStorage.getItem('channels'))
@@ -222,8 +224,10 @@ export default {
     // 对文章进行操作
     isOperationShowFn (item) {
       this.isOperationShow = true
-      this.operationArticle = item
-      console.log(item)
+      // 给当前文章添加反馈状态
+      item.operationType = false
+      this.operationArticleData = item
+      // console.log(this.operationArticleData)
     }
   },
   // 监视用户是否登录，因为路由已经换成，不在调用钩子函数,需要监视用户登录状态
@@ -234,6 +238,15 @@ export default {
       // 设置上划状态为true，重新获取频道文章数据
       this.articlesChannel.upLoading = true
       await this.onLoad()
+    },
+    // 监听文章的反馈状态
+    operationArticleData (newVal) {
+      // console.log('operationType', newVal.operationType)
+      if (newVal.operationType) {
+        const articles = this.articlesChannel.articles
+        const delIndex = articles.findIndex(item => item.art_id.toString() === newVal.art_id.toString())
+        articles.splice(delIndex, 1)
+      }
     }
   },
   components: {
