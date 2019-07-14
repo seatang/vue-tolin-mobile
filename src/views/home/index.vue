@@ -61,7 +61,7 @@
                 <van-row>
                   <van-col span="8">作者：{{item.aut_name}}</van-col>
                   <van-col span="4">{{item.comm_count}}评论</van-col>
-                  <van-col span="8">{{item.pubdate}}</van-col>
+                  <van-col span="8">{{item.pubdate | relativeTime}}</van-col>
                   <van-col span="4">
                     <van-icon
                       style="float: right; font-size: 20px;"
@@ -90,6 +90,7 @@
 import homeChannel from './components/channel'
 import { getUserChannelsList } from '@/api/channelsAPI'
 import { getArticlesList } from '@/api/articlesAPI'
+
 export default {
   name: 'Home',
   data () {

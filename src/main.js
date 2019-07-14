@@ -7,6 +7,8 @@ import '@/styles/index.less'
 // 引入第三方表单校验
 import VeeValidate, { Validator } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
+// 加载时间过滤器
+import relativeTime from './filters/relativeTime'
 
 import 'amfe-flexible'
 // 全部引入，后续再按需引入
@@ -24,6 +26,8 @@ Vue.prototype.$sleep = time => {
     setTimeout(() => { resolve() }, time)
   })
 }
+// 注册全局过滤器
+Vue.filter('relativeTime', relativeTime)
 
 // import { Button, Field, CellGroup, Icon, Toast, Loading } from 'vant'
 
