@@ -4,6 +4,7 @@
     @input="$emit('input',$event)"
     :show-confirm-button="false"
     close-on-click-overlay
+    :beforeClose="handelCloseDialog"
   >
 
     <van-cell-group v-if="!reportType">
@@ -35,13 +36,14 @@
         v-for="item in reportList"
         :key='item.value'
         :title="item.label"
+        @click="handelReportsArticle(item)"
       />
     </van-cell-group>
   </van-dialog>
 </template>
 
 <script>
-import { dislikesArticle } from '@/api/articlesAPI'
+import { dislikesArticle, reportsArticle } from '@/api/articlesAPI'
 import { blacklists } from '@/api/requestAPI'
 export default {
   name: 'operationArticle',
@@ -134,6 +136,32 @@ export default {
       } catch (error) {
         this.$toast('操作失败' + error)
       }
+    },
+    // 举报文章
+    async handelReportsArticle (item) {
+      try {
+        const articleId = this.operationArticleData.art_id.toString()
+        const type = item.value
+        // console.log(articleId, type)
+        const data = await reportsArticle({ articleId, type, remark: '' })
+        console.log(data)
+        this.$toast('举报成功')
+
+        this.reportType = false
+      } catch (error) {
+        if (error.response.status === 409) {
+          this.$toast('该文章已经被举报过啦')
+        }
+      }
+    },
+    // 关闭弹出层,使用弹出框组件的beforeClose属性，绑定函数，接收参数action、done;
+    // done 可以关闭弹出层
+    handelCloseDialog (action, done) {
+      done()
+      // this.$emit('input', false)
+      window.setTimeout(() => {
+        this.reportType = false
+      }, 200)
     }
   }
 }
