@@ -6,8 +6,11 @@
       show-action
     />
     <van-cell-group>
-      <van-cell title="单元格" />
-      <van-cell title="单元格" />
+      <van-cell
+        v-for="item in searchList"
+        :key="item"
+        :title="item"
+      />
     </van-cell-group>
     <hr>
     <van-cell-group>
@@ -24,11 +27,24 @@
 </template>
 
 <script>
+import { getSuggestion } from '@/api/searchAPI'
 export default {
   name: 'searchIndex',
   data () {
     return {
-      keyword: ''
+      keyword: '', // 关键字
+      searchList: [] // 关键字返回结果
+    }
+  },
+  watch: {
+    async keyword (newVal) {
+      // 去除搜索关键字的首尾空格
+      newVal = newVal.trim()
+      if (!newVal) {
+        return
+      }
+      const data = await getSuggestion(newVal)
+      this.searchList = data.options
     }
   }
 }
