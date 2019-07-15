@@ -3,9 +3,17 @@
     <!-- 首页 -->
     <van-nav-bar
       title="首页"
+      left-arrow
       fixed
-      class="nav-bar"
     >
+      <div slot="right">
+        <van-button
+          round
+          type="primary"
+          size="small"
+          to="/search"
+        >搜索</van-button>
+      </div>
     </van-nav-bar>
     <!-- 频道 -->
     <van-tabs
