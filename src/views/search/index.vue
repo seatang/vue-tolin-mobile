@@ -9,8 +9,14 @@
       <van-cell
         v-for="item in searchList"
         :key="item"
-        :title="item"
-      />
+      >
+        <div
+          slot="title"
+          v-html="keywordHighlight(item,keyword)"
+        >
+
+        </div>
+      </van-cell>
     </van-cell-group>
     <hr>
     <van-cell-group>
@@ -51,7 +57,11 @@ export default {
     }, 500)
   },
   methods: {
-
+    // 关键字高亮
+    keywordHighlight (item, keyword) {
+      // 将搜索结果转为小写，在按照关键截取，在拼接关键字，设置关键字的样式
+      return item.toLowerCase().split(keyword).join(`<strong style="color: red;">${keyword}</strong>`)
+    }
   }
 }
 </script>
