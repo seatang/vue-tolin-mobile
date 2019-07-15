@@ -6,7 +6,7 @@
       show-action
       @search="handelSearchResult(keyword)"
     />
-    <van-cell-group>
+    <van-cell-group v-if="searchList.length && keyword.length">
       <van-cell
         v-for="item in searchList"
         :key="item"
@@ -16,20 +16,38 @@
           slot="title"
           v-html="keywordHighlight(item,keyword)"
         >
-
         </div>
       </van-cell>
     </van-cell-group>
-    <hr>
-    <van-cell-group>
+    <van-cell-group v-else>
       <van-cell title="历史记录">
         <van-icon
+          v-show="!isShowClose"
           slot="right-icon"
           name="delete"
           style="line-height: inherit;"
+          @click="isShowClose = true"
+        />
+        <div v-show="isShowClose">
+          <span @click="searchKeyWordHistories = []">全部删除</span>&nbsp;
+          <span @click="isShowClose = false">完成</span>
+        </div>
+
+      </van-cell>
+      <van-cell
+        v-for="(item, index) in searchKeyWordHistories"
+        :key="item"
+        :title="item"
+        @click="handelSearchResult(item)"
+      >
+        <van-icon
+          v-show="isShowClose"
+          slot="right-icon"
+          name="close"
+          style="line-height: inherit;"
+          @click="searchKeyWordHistories.splice(index, 1)"
         />
       </van-cell>
-      <van-cell title="单元格" />
     </van-cell-group>
   </div>
 </template>
@@ -42,7 +60,9 @@ export default {
   data () {
     return {
       keyword: '', // 关键字
-      searchList: [] // 关键字返回结果
+      searchList: [], // 关键字返回结果
+      searchKeyWordHistories: JSON.parse(window.localStorage.getItem('search-histories')), // 搜索关键字本地存储
+      isShowClose: false
     }
   },
   watch: {
@@ -66,6 +86,17 @@ export default {
     },
     // 搜索结果路由传参
     handelSearchResult (q) {
+      //  判断是否有关键词
+      if (q.legth) {
+        return
+      }
+      this.searchKeyWordHistories.unshift(q)
+      // console.log(this.searchKeyWordHistories)
+      // 将搜索关键词存入本地
+      window.localStorage.setItem('search-histories',
+        JSON.stringify([...new Set(this.searchKeyWordHistories)])
+      )
+      // 跳转到搜索结果界面
       this.$router.push({
         name: 'search-result',
         params: {

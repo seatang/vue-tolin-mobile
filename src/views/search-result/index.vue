@@ -10,6 +10,7 @@
           round
           type="primary"
           size="small"
+          @click="$router.back()"
         >返回</van-button>
       </div>
     </van-nav-bar>
@@ -25,6 +26,7 @@
         v-for="item in searchResulList"
         :key="item.art_id.toString()"
         :title="item.title"
+        class="cell"
       >
         <div slot="label">
           <template v-if="item.cover.type">
@@ -83,6 +85,10 @@ export default {
       return this.$route.params.q
     }
   },
+  deactivated () {
+    // 由于组件和路由都存在缓存问题，则手动销毁此组件
+    this.$destroy()
+  },
   methods: {
     async onLoad () {
       await this.$sleep(800)
@@ -96,13 +102,14 @@ export default {
       }
       // 将获取的数据结果，解构push到数据列表中
       this.searchResulList.push(...data.results)
-      console.log(data.results)
+      // console.log(data.results)
       // 更新页码，获取下页数据
       this.page++
       this.loading = false
     },
     // 获取搜索结果数据列表
     getSearchResult () {
+      // console.log(this.q)
       return getSearch({
         page: this.page,
         perPage: this.perPage,
@@ -114,6 +121,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.cell {
+  margin-bottom: 36px;
+}
 .van-rcol {
   height: 60px;
   line-height: 60px;
@@ -121,5 +131,6 @@ export default {
   text-align: center;
   vertical-align: middle;
   border-top: 1px solid #ccc;
+  margin-top: 20px;
 }
 </style>

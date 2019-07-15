@@ -20,7 +20,7 @@ export const getSuggestion = (q) => {
  * per_page:每页数量，不传每页数量由后端决定
  * q:搜索关键字
  */
-export const getSearch = ({ page, q, perPage }) => {
+export const getSearch = ({ page, perPage, q }) => {
   return request({
     method: 'GET',
     url: '/app/v1_0/search',
