@@ -4,11 +4,13 @@
       placeholder="请输入搜索关键词"
       v-model="keyword"
       show-action
+      @search="handelSearchResult(keyword)"
     />
     <van-cell-group>
       <van-cell
         v-for="item in searchList"
         :key="item"
+        @click="handelSearchResult(item)"
       >
         <div
           slot="title"
@@ -61,6 +63,15 @@ export default {
     keywordHighlight (item, keyword) {
       // 将搜索结果转为小写，在按照关键截取，在拼接关键字，设置关键字的样式
       return item.toLowerCase().split(keyword).join(`<strong style="color: red;">${keyword}</strong>`)
+    },
+    // 搜索结果路由传参
+    handelSearchResult (q) {
+      this.$router.push({
+        name: 'search-result',
+        params: {
+          q
+        }
+      })
     }
   }
 }
