@@ -28,6 +28,7 @@
 
 <script>
 import { getSuggestion } from '@/api/searchAPI'
+import { debounce } from 'lodash'
 export default {
   name: 'searchIndex',
   data () {
@@ -37,15 +38,20 @@ export default {
     }
   },
   watch: {
-    async keyword (newVal) {
+    // 使用函数防抖处理，关键字频繁调用接口的问题
+    keyword: debounce(async function (newVal) {
       // 去除搜索关键字的首尾空格
       newVal = newVal.trim()
+      // 判断是否为空，为空什么都不做
       if (!newVal) {
         return
       }
       const data = await getSuggestion(newVal)
       this.searchList = data.options
-    }
+    }, 500)
+  },
+  methods: {
+
   }
 }
 </script>
