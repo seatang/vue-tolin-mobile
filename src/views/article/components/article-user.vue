@@ -14,6 +14,7 @@
       <van-button
         :type="article.is_followed ? 'default': 'danger'"
         :loading="isfollowingLoading"
+        :disabled="isfollowingLoading"
         @click="handlefollowingsUser"
       >{{article.is_followed ? '已关注':'+ 关注'}}</van-button>
     </div>

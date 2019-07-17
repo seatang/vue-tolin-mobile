@@ -23,7 +23,7 @@
       v-html="article.content"
     ></div>
     <!-- 文章更多操作组件 -->
-    <more-action />
+    <more-action :article.sync="article" />
     <!-- 留言列表组件 -->
     <comment-list />
   </div>

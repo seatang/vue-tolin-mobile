@@ -54,3 +54,26 @@ export const getArticleItem = articleId => {
     url: '/app/v1_0/articles/' + articleId
   })
 }
+
+/**
+ * 点赞文章
+ */
+export const likings = articleId => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/likings',
+    data: {
+      target: articleId
+    }
+  })
+}
+
+/**
+ * 取消点赞文章
+ */
+export const unLikings = articleId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/likings/${articleId}`
+  })
+}
