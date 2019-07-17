@@ -51,6 +51,7 @@
               v-for="item in channelItem.articles"
               :key="item.art_id.toString()"
               :title="item.title"
+              @click="handleArticle(item)"
             >
               <div slot="label">
                 <template v-if="item.cover.type">
@@ -236,6 +237,15 @@ export default {
       item.operationType = false
       this.operationArticleData = item
       // console.log(this.operationArticleData)
+    },
+    // 跳转文章详情
+    handleArticle (item) {
+      this.$router.push({
+        name: 'article-item',
+        params: {
+          articleId: item.art_id.toString()
+        }
+      })
     }
   },
   // 监视用户是否登录，因为路由已经换成，不在调用钩子函数,需要监视用户登录状态

@@ -61,7 +61,7 @@ export default {
     return {
       keyword: '', // 关键字
       searchList: [], // 关键字返回结果
-      searchKeyWordHistories: JSON.parse(window.localStorage.getItem('search-histories')), // 搜索关键字本地存储
+      searchKeyWordHistories: [] || JSON.parse(window.localStorage.getItem('search-histories')), // 搜索关键字本地存储
       isShowClose: false
     }
   },
