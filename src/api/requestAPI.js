@@ -33,3 +33,11 @@ export const followingsUser = (userId) => {
     }
   })
 }
+
+// 取消关注用户
+export const unfollowingsUser = (userId) => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${userId}`
+  })
+}

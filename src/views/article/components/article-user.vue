@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { followingsUser } from '@/api/requestAPI'
+import { followingsUser, unfollowingsUser } from '@/api/requestAPI'
 export default {
   name: 'articleUser',
   props: {
@@ -40,25 +40,28 @@ export default {
     async handlefollowingsUser () {
       // 用户是否登录
       try {
-        const { followed } = this.article
+        // 按钮进入加载状态
+        this.isfollowingLoading = true
         const articleUser = {}
         Object.assign(articleUser, this.article)
         // 判断是否关注
-        if (followed) {
-          // 已登录
-          return
+        if (this.article.is_followed) {
+          // 取消关注
+          await unfollowingsUser(this.article.aut_id)
+          // 请求成功，改变关注状态
+          articleUser.is_followed = false
+          this.$emit('update:article', articleUser)
         } else {
-          // 未登录
-          this.isfollowingLoading = true
+          // 关注
           await followingsUser(this.article.aut_id)
           // 请求成功，改变关注状态
           articleUser.is_followed = true
           this.$emit('update:article', articleUser)
-          this.isfollowingLoading = false
         }
       } catch (error) {
         this.$toast('操作失败')
       }
+      this.isfollowingLoading = false
     }
   }
 }
