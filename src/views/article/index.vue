@@ -16,7 +16,7 @@
     <!-- 文章标题 -->
     <strong>{{ article.title }}</strong>
     <!-- 作者信息组件 -->
-    <article-user :article="article" />
+    <article-user :article.sync="article" />
     <!-- 文章内容 -->
     <div
       class="article-content"
