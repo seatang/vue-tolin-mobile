@@ -1,49 +1,54 @@
 <template>
-  <van-list
-    v-model="loading"
-    :finished="finished"
-    finished-text="没有更多了"
-    @load="onLoad"
-  >
-    <van-cell
-      v-for="item in commentList"
-      :key="item.aut_id.toString()"
+  <div>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
     >
-      <div class="user">
-        <div class="article-user">
-          <img
-            class="img"
-            :src="item.aut_photo"
-          >
-          <div class="user-info">
-            <p>评论者：{{item.aut_name}}</p>
-            <p>{{item.content}}</p>
-            <p>
-              {{item.pubdate | relativeTime}}
-              <van-button
-                size="small"
-                round
-                type="info"
-              >回复{{item.reply_count}}</van-button>
-            </p>
+      <van-cell
+        v-for="item in commentList"
+        :key="item.aut_id.toString()"
+      >
+        <div class="user">
+          <div class="article-user">
+            <img
+              class="img"
+              :src="item.aut_photo"
+            >
+            <div class="user-info">
+              <p>评论者：{{item.aut_name}}</p>
+              <p>{{item.content}}</p>
+              <p>
+                {{item.pubdate | relativeTime}}
+                <van-button
+                  size="small"
+                  round
+                  type="info"
+                >回复{{item.reply_count}}</van-button>
+              </p>
+            </div>
+          </div>
+          <div>
+            <van-button
+              size="small"
+              round
+              :icon="item.is_liking? 'like' :'like-o'"
+              :loading="likeLoading"
+              :disabled="likeLoading"
+              type="danger"
+              @click="handleLikings(item)"
+            >
+              {{item.like_count}}</van-button>
           </div>
         </div>
-        <div>
-          <van-button
-            size="small"
-            round
-            :icon="item.is_liking? 'like' :'like-o'"
-            type="danger"
-          >
-            {{item.like_count}}</van-button>
-        </div>
-      </div>
-    </van-cell>
-  </van-list>
+      </van-cell>
+    </van-list>
+  </div>
 </template>
 
 <script>
-import { getComments } from '@/api/commentAPI'
+import { getComments, likings, unLikings } from '@/api/commentAPI'
 export default {
   name: 'commentList',
   props: {
@@ -57,8 +62,8 @@ export default {
       loading: false, // 加载状态
       finished: false, // 数据加载完毕状态
       offset: null, // 获取评论回复的评论id
-      limit: 10 // 每页数量
-
+      limit: 10, // 每页数量
+      likeLoading: false // 点赞按钮状态
     }
   },
   methods: {
@@ -79,6 +84,29 @@ export default {
       this.loading = false
       // 记录本次 last_id ，用于请求下页数据
       this.offset = data.last_id
+    },
+    // 对评论进行点赞或取消点赞
+    async handleLikings (item) {
+      // 判断是否登录
+      if (!this.$checkUser) {
+        return
+      }
+      // 判断是否点过赞
+      if (item.is_liking) {
+        this.likeLoading = true
+        console.log('1')
+        // 已赞,取消点赞
+        await unLikings(item.com_id.toString())
+        item.is_liking = false
+        this.likeLoading = false
+      } else {
+        this.likeLoading = true
+        console.log('2')
+        // 未赞，点赞
+        await likings(item.com_id.toString())
+        item.is_liking = true
+        this.likeLoading = false
+      }
     }
   }
 }

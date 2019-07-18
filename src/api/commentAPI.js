@@ -21,3 +21,21 @@ export const getComments = ({
     }
   })
 }
+
+// 对评论进行点赞
+export const likings = (commentId) => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/comment/likings',
+    data: {
+      target: commentId
+    }
+  })
+}
+// 取消评论进行点赞
+export const unLikings = (commentId) => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/comment/likings/${commentId}`
+  })
+}
