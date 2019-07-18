@@ -114,9 +114,10 @@ export default {
         // console.log(data)
         // 保存登录信息到本地存储
         this.$store.commit('changUser', data)
-
         this.$toast.success('登录成功')
-        this.$router.push({ name: 'home' })
+        // 接收路由跳转的路径
+        const redirect = this.$route.query.redirect || '/'
+        this.$router.push(redirect)
       } catch (error) {
         console.log(error)
         this.$toast.fail('登录失败')

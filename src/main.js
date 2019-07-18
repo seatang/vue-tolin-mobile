@@ -13,6 +13,10 @@ import relativeTime from './filters/relativeTime'
 import 'amfe-flexible'
 // 全部引入，后续再按需引入
 import Vant from 'vant'
+// 在全局挂载用户登录提示
+import checkUser from './utils/check-user'
+Vue.prototype.$checkUser = checkUser
+
 Vue.use(Vant)
 
 Vue.use(VeeValidate, {

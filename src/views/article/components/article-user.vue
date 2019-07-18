@@ -39,6 +39,10 @@ export default {
   methods: {
     // 关注用户
     async handlefollowingsUser () {
+      // 检查用户是否登录
+      if (!this.$checkUser()) {
+        return
+      }
       // 用户是否登录
       try {
         // 按钮进入加载状态

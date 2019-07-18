@@ -41,6 +41,10 @@ export default {
     // 点赞文章
     async handleLikingsArticle () {
       try {
+        // 检查用户是否登录
+        if (!this.$checkUser()) {
+          return
+        }
         this.likeArticleLoading = true
         const artId = this.article.art_id
         const likeArticle = {}
@@ -66,6 +70,10 @@ export default {
     // 不喜欢文章
     async handleDislikesArticle () {
       try {
+        // 检查用户是否登录
+        if (!this.$checkUser()) {
+          return
+        }
         this.dislikesArticleLoading = true
         const artId = this.article.art_id
         const likeArticle = {}
