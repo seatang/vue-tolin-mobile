@@ -25,7 +25,7 @@
     <!-- 文章更多操作组件 -->
     <more-action :article.sync="article" />
     <!-- 留言列表组件 -->
-    <comment-list />
+    <comment-list :article-id="articleId" />
   </div>
 </template>
 
