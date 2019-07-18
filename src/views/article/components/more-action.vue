@@ -12,14 +12,17 @@
     <span>
       <van-button
         icon="like-o"
-        type="danger"
-      >不喜欢</van-button>
+        :type="article.attitude===0 ? 'danger':'default'"
+        :disabled="dislikesArticleLoading"
+        :loading="dislikesArticleLoading"
+        @click="handleDislikesArticle"
+      >{{article.attitude===0 ? '取消不喜欢':'不喜欢'}}</van-button>
     </span>
   </div>
 </template>
 
 <script>
-import { likings, unLikings } from '@/api/articlesAPI'
+import { likings, unLikings, unDislikesArticle, dislikesArticle } from '@/api/articlesAPI'
 export default {
   name: 'moreAction',
   props: {
@@ -30,7 +33,8 @@ export default {
   },
   data () {
     return {
-      likeArticleLoading: false // 点赞按钮加载状态
+      likeArticleLoading: false, // 点赞按钮加载状态
+      dislikesArticleLoading: false // 不喜欢按钮加载状态
     }
   },
   methods: {
@@ -58,6 +62,31 @@ export default {
         this.$toast('操作失败')
       }
       this.likeArticleLoading = false
+    },
+    // 不喜欢文章
+    async handleDislikesArticle () {
+      try {
+        this.dislikesArticleLoading = true
+        const artId = this.article.art_id
+        const likeArticle = {}
+        Object.assign(likeArticle, this.article)
+        console.log(artId)
+        // 判断不喜欢文章状态
+        if (this.article.attitude === 0) {
+          // 不喜欢
+          await unDislikesArticle(artId)
+          likeArticle.attitude = -1
+          this.$emit('update:article', likeArticle)
+        } else {
+          // 取消不喜欢
+          await dislikesArticle(artId)
+          likeArticle.attitude = 0
+          this.$emit('update:article', likeArticle)
+        }
+      } catch (error) {
+        this.$toast('操作失败')
+      }
+      this.dislikesArticleLoading = false
     }
   }
 }

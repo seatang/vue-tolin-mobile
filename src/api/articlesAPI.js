@@ -26,7 +26,13 @@ export const dislikesArticle = (articleId) => {
     }
   })
 }
-
+// 取消对文章不喜欢
+export const unDislikesArticle = (articleId) => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/dislikes/${articleId}`
+  })
+}
 /**
  * 举报文章
  * articleId:文章id
