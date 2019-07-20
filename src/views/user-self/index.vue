@@ -13,11 +13,17 @@
         title="头像"
         value="内容"
         is-link
+        @click="changeImg"
       >
         <div slot="default">
           <img
             width="50"
             :src="user.photo"
+          >
+          <input
+            type="file"
+            ref="file"
+            style="display:none;"
           >
         </div>
       </van-cell>
@@ -57,6 +63,10 @@ export default {
   created () {
     this.loadUserProfile()
   },
+  mounted () {
+    // 监听input文件上传
+    this.$refs['file'].addEventListener('change', this.handleUserImg)
+  },
   methods: {
     handelSeven () {
 
@@ -64,6 +74,21 @@ export default {
     // 获取用户信息
     async loadUserProfile () {
       this.user = await getUserProfile()
+    },
+    // 选择头像
+    handleUserImg () {
+      // 用vue方式获dom对象中的文件对象
+      const file = this.$refs['file'].files[0]
+      // 异步读取用户选择的文件；参考文档见：https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
+      const reader = new FileReader()
+      // 开始读取指定的Blob中的内容。一旦完成，result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容。
+      reader.readAsDataURL(file)
+      reader.addEventListener('load', () => {
+        this.user.photo = reader.result
+      })
+    },
+    changeImg () {
+      this.$refs['file'].click()
     }
   }
 }
