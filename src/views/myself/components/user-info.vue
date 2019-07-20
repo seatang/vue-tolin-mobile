@@ -1,6 +1,9 @@
 <template>
   <div class="user-info">
-    <div class="user">
+    <div
+      class="user"
+      @click="$router.push({name:'user-self'})"
+    >
       <img
         class="user-img"
         :src="userInfo.photo"
