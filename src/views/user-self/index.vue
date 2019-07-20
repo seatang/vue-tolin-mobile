@@ -19,6 +19,7 @@
           <img
             width="50"
             :src="user.photo"
+            alt="炸了"
           >
           <input
             type="file"
@@ -52,7 +53,7 @@
 </template>
 
 <script>
-import { getUserProfile } from '@/api/requestAPI'
+import { getUserProfile, updateUserProfile } from '@/api/requestAPI'
 export default {
   name: 'user-self',
   data () {
@@ -62,14 +63,23 @@ export default {
   },
   created () {
     this.loadUserProfile()
+    let arr = [NaN, NaN, [], [], {}, {}, 1, 1, '2', '2', null, null, undefined, undefined, true, true, function () { }, function () { }]
+    let set = new Set(arr)
+    console.log(set)
   },
   mounted () {
     // 监听input文件上传
     this.$refs['file'].addEventListener('change', this.handleUserImg)
   },
   methods: {
-    handelSeven () {
-
+    async handelSeven () {
+      try {
+        const data = await updateUserProfile(this.user)
+        console.log(data)
+        this.$toast('更新成功')
+      } catch (error) {
+        this.$toast('更新失败', error)
+      }
     },
     // 获取用户信息
     async loadUserProfile () {
@@ -88,6 +98,7 @@ export default {
       })
     },
     changeImg () {
+      // 获取dom对象，调用点击事件
       this.$refs['file'].click()
     }
   }
