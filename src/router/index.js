@@ -56,6 +56,11 @@ export default new Router({
       name: 'user-self',
       path: '/user-self',
       component: () => import('@/views/user-self')
+    },
+    {
+      name: 'web-socket',
+      path: '/web-socket',
+      component: () => import('@/views/web-socket')
     }
   ]
 })

@@ -14,6 +14,7 @@
       <van-cell
         title="小智同学"
         is-link
+        @click="$router.push({name:'web-socket'})"
       />
     </div>
   </div>
